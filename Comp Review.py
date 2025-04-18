@@ -111,40 +111,48 @@ print(end - start)
 
 #选择排序 Selection Sort 
 def selectionSort(alist):
-    for idx in range(len(alist) - 1):
+    for idx in range(len(alist) - 1): #从0到n-2
         min_index = idx
     for j in range(idx + 1, len(alist)):
     # select the minimum element in every iteration
         if alist[j] < alist[min_index]:
             min_index = j
-        # swapping the elements to sort the list
-        alist[idx], alist[min_index] = alist[min_index], alist[idx]
+    # swapping the elements to sort the list
+    alist[idx], alist[min_index] = alist[min_index], alist[idx]
 selectionSort(thelist)
 
 
 #冒泡排序 Bubble Sort
-#sorting by swapping unordered items
-def bubbleSort(alist):
-   # after each iteration, we will have one more sorted item
-   for idx in range(len(alist) -1, 0, -1): 
-      # define a Boolean var, stop the algorithm if no swap made
-      if_swapped = False
-      for j in range(idx):
-         # for easier coding, here we start from index 0
-         if alist[j] > alist[j + 1]:
-            if_swapped = True # we made swaps in this iteration
-            # swapping the elements to sort the array
-            alist[j], alist[j + 1] = alist[j + 1], alist[j]
-      if not if_swapped: # no more swap is needed, sorting completed
-         return
-bubbleSort(thelist)
+alist = [64, 34, 25, 12, 22, 11, 90]
+#正序排序：
+def bubble_sort(alist):
+    for i in range(len(alist)-1): #从0到n-2
+        swapped = False
+        for j in range(len(alist)-1-i):
+            if alist[j] > alist[j+1]:
+                alist[j],alist[j+1] = alist[j+1],alist[j]
+                swapped = True
+        if not swapped:
+            break
+    return alist
+#倒叙排序：
+def bubble_sort_reverse(alist): #从1到n-1
+    for i in range(len(alist)-1,0,-1):
+        swapped = False
+        for j in range(i):
+            if alist[j] > alist[j+1]:
+                alist[j],alist[j+1] = alist[j+1],alist[j]
+                swapped = True
+        if not swapped:
+            break
+    return alist
 
 
 #插入排序 Insertion Sort
 #sorting by insertion elements
 def insertionSort(alist):
    # traverse through 1 to len(alist)
-   for idx in range(1, len(alist)): 
+   for idx in range(1, len(alist)): #从1到n-1 因为第一个已经排序好了
       # move elements of alist[0 .. idx-1], that are greater than 
       # the previous value, to one position ahead of their current 
       # position
@@ -280,6 +288,11 @@ class Node:
     def __init__(self, data=None):
         self.data = data
         self.nextobj = None
+node_1 = Node(12)
+node_2 = Node(99)
+node_3 = Node(37)
+node_1.nextobj = node_2
+node_2.nextobj = node_3
 
 class LinkedList:
     def __init__(self):
