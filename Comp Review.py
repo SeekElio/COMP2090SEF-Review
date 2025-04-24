@@ -108,7 +108,7 @@ print(end - start)
 
 
 #Sorting 排序算法 - some well-defined order 
-
+alist = [64, 34, 25, 12, 22, 11, 90]
 #选择排序 Selection Sort 
 def selectionSort(alist):
     for idx in range(len(alist) - 1): #从0到n-2
@@ -119,7 +119,7 @@ def selectionSort(alist):
             min_index = j
     # swapping the elements to sort the list
     alist[idx], alist[min_index] = alist[min_index], alist[idx]
-selectionSort(thelist)
+selectionSort(alist)
 
 
 #冒泡排序 Bubble Sort
@@ -141,15 +141,25 @@ def bubble_sort_reverse(alist): #从1到n-1
         swapped = False
         for j in range(i):
             if alist[j] > alist[j+1]:
-                alist[j],alist[j+1] = alist[j+1],alist[j]
                 swapped = True
+                alist[j],alist[j+1] = alist[j+1],alist[j]
         if not swapped:
-            break
+            return
     return alist
-
+bubble_sort_reverse(alist)
 
 #插入排序 Insertion Sort
-#sorting by insertion elements
+
+#正序排序
+def insertion_sort(alist):
+    for i in range(1,len(alist)):
+        current = alist[i]
+        j = i -1
+        while (j >=0 and alist[j] > current):
+            alist[j+1] = alist[j]
+            j-=1
+        alist[j+1] = current
+#倒叙排序
 def insertionSort(alist):
    # traverse through 1 to len(alist)
    for idx in range(1, len(alist)): #从1到n-1 因为第一个已经排序好了
@@ -299,16 +309,42 @@ class LinkedList:
         self.head = None
     def insertEnd(self, data):
         # insert new data at the end
-        if self.head == None:
+        if self.head == None:            # 如果火车没有车头
             # if the link has no node
-            self.head = Node(data)
+            self.head = Node(data)       # 新车厢直接成为车头
             return
-        temp = self.head
+        temp = self.head      #如果有车头
         # traverse to the last node
-        while temp.nextobj != None:
-            temp = temp.nextobj
-            temp.nextobj = Node(data)
-
+        while temp.nextobj != None:   #只要还没有到达车尾,逐个车厢检查
+            temp = temp.nextobj     #让 temp 指针移动到下一个节点
+        temp.nextobj = Node(data)   #将车尾的挂钩指向新车厢，完成尾插。
+    def insertBegin(self, data):
+        # insert new data at the beginning
+        new_node = Node(data)
+        new_node.nextobj = self.head
+        self.head = new_node
+    def insertBetween(self, mid_node, data):
+        # insert new data in between
+        # mid_node and mid_node.nextobj
+        new_node = Node(data)
+        new_node.nextobj = mid_node.nextobj
+        mid_node.nextobj = new_node
+    def printList(self):
+        thenode = self.head
+        while thenode.nextobj != None:
+            print(thenode.data)
+            thenode = thenode.nextobj
+    def deleteNode(self, target_data):
+        thenode = self.head 
+        if thenode.data == target_data:   
+            self.head = thenode.nextobj   #让新车头变为原车头的下一节车厢
+            return
+        while thenode.nextobj != None: #当问题车厢不在车头时，遍历寻找问题车厢
+            if thenode.data == target_data:
+                break
+            prevnode = thenode # 记录当前车厢的前一节车厢
+            thenode = thenode.nextobj # 移动到下一节车厢
+        prevnode.nextobj = thenode.nextobj #让前一节车厢的挂钩，跳过问题车厢，直接连接下一节车厢
 #哈希表
 class HashTable:
     def __init__(self, capacity):
@@ -323,16 +359,16 @@ class HashTable:
         # open addressing resolves collision
         while self.buckets[index] != None:
             index += 1
-            self.buckets[index] = {'key': key, 'value': value}
-            self.load += 1 # update the load number
+        self.buckets[index] = {'key': key, 'value': value}
+        self.load += 1 # update the load number
     def search(self, key):
         index = self.hash_function(key)
         while self.buckets[index] is not None and self.buckets[index]['key'] != key:
             index += 1
-            if self.buckets[index] is None:
-                return None # Not found
-            else:
-                return self.buckets[index]['value'] # return the value
+        if self.buckets[index] is None:
+            return None # Not found
+        else:
+            return self.buckets[index]['value'] # return the value
     def remove(self, key):
         index = self.hash_function(key)
         while self.buckets[index] is not None and self.buckets[index]['key'] != key:
@@ -342,4 +378,4 @@ class HashTable:
             else:
                 self.buckets[index] = None # Remove the key-value pair
                 self.load -= 1 # update the load number
-                return
+                return 
