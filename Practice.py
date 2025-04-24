@@ -567,15 +567,39 @@ class Node:
 class LinkedList:
     def __init__(self):
         self.head = None
-    def inser_begin(self,data):
+    def insert_begin(self,data):
         new_node = Node(data)
         new_node.nextobj = self.head
-        self.head =  new_node
+        self.head = new_node
+    def insert_end(self,data):
+        if self.head == None:
+            self.head = Node(data)
+            return
+        temp = self.head
+        while temp.nextobj != None:
+            temp = temp.nextobj
+            temp.nextobj = Node(data)
+    def insert_between(self,mid_node,data):
+        new_node = Node(data)
+        new_node.nextobj = mid_node.nextobj
+        mid_node.nextbj = new_node
     def print_list(self):
         thenode = self.head
-        while thenode!=None:
-            print(thenode)
+        while thenode.nextobj !=None:
+            print(thenode.data)
             thenode = thenode.nextobj
+    def deleteNode(self,target_data):
+        thenode = self.head
+        if thenode.data == target_data:
+            self.head = thenode.nextobj
+            return
+        while thenode.nextobj != None:
+            if thenode.data == target_data:
+                break
+            prevnode = thenode
+            thenode = thenode.nextobj
+        prevnode.nextobj = thenode.nextboj
+
 #七、Stack and Queues（栈和队列）
 #题目 1：栈操作
 #实现栈的 push 和 pop 方法，并模拟栈的进出过程。
@@ -605,19 +629,31 @@ class HashTable:
     def __init__(self,capacity):
         self.capacity = capacity
         self.load = 0
-        self.buckets = [None] * capacity
+        self.bucktes = [None] * capacity
+    def hash_function(self,key,value):
+        hashed_value = hash(key)%self.capacity
+        return hashed_value
     def insert(self,key,value):
         index = self.hash_function(key)
-        while self.buckets[index]!=None:
+        while self.buckets[index] !=None:
             index+=1
-        self.buckets[index] = {'key':key,'value':value}
+        self.buckets[index] = {'key':key,"value":value}
         self.load +=1
     def search(self,key):
         index = self.hash_function(key)
-        while self.bucktes[index]!=None and self.buckets['key']!=key:
+        while self.buckets[index]!=None and self.buckets['key']!=key:
             index+=1
         if self.buckets[index]==None:
             return None
         else:
             return self.buckets[index]['value']
-        
+    def remove(self,key):
+        index = self.hash_function(key)
+        while self.buckets[index]!= None and self.buckets['key']!=key:
+            index+=1
+        if self.bucktes[index]==None:
+            return None
+        else:
+            self.bucktes[index] = None
+            self.load -=1
+            return
